@@ -1,5 +1,4 @@
-
-package workingWithAbstraction.greedyTimes;
+package exercise_06;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -49,8 +48,8 @@ public class Main {
 					} else {
 						continue;
 					}
-				} else if (bag.get(kvoE).values().stream().mapToLong(e -> e).sum() + broika > bag.get("Gold")
-						.values().stream().mapToLong(e -> e).sum()) {
+				} else if (bag.get(kvoE).values().stream().mapToLong(e -> e).sum() + broika > bag.get("Gold").values()
+						.stream().mapToLong(e -> e).sum()) {
 					continue;
 				}
 				break;
@@ -63,8 +62,8 @@ public class Main {
 					} else {
 						continue;
 					}
-				} else if (bag.get(kvoE).values().stream().mapToLong(e -> e).sum() + broika > bag.get("Gem")
-						.values().stream().mapToLong(e -> e).sum()) {
+				} else if (bag.get(kvoE).values().stream().mapToLong(e -> e).sum() + broika > bag.get("Gem").values()
+						.stream().mapToLong(e -> e).sum()) {
 					continue;
 				}
 				break;
