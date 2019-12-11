@@ -24,7 +24,7 @@ public class Bus extends VehicleImpl {
 		}
 		this.setOccupied(false);
 
-		return super.drive(distance);
+		return String.format("Bus %s", super.drive(distance));
 	}
 
 	@Override

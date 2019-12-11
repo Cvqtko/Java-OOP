@@ -23,12 +23,12 @@ public class Main {
 			String type = tokens[1];
 			double value = Double.parseDouble(tokens[2]);
 			try {
-				if (command.equals("Drive")) {
+				if (command.contains("Drive")) {
 					if (type.equals("Bus")) {
 						((Bus) vehicles.get(type)).setOccupied(true);
-						vehicles.get(type).drive(value);
+						System.out.println(vehicles.get(type).drive(value));
 					} else {
-						vehicles.get(type).drive(value);
+						System.out.println(vehicles.get(type).drive(value));
 					}
 				} else
 					vehicles.get(type).refuel(value);
