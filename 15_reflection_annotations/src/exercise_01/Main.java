@@ -1,71 +1,22 @@
 package exercise_01;
 
-import java.util.Scanner;
+import java.lang.reflect.InvocationTargetException;
 
 public class Main {
-	public static void main(String[] args) {
-
-		Scanner scanner = new Scanner(System.in);
-
-		Logger logger = new MessageLogger();
-
-		int n = Integer.parseInt(scanner.nextLine());
-		Appender appender = null;
-		while (n-- > 0) {
-			String[] tokens = scanner.nextLine().split("\\s+");
-
-			String appenderType = tokens[0];
-
-			Layout layout = tokens[1].equals("SimpleLayout") ? new SimpleLayout() : new XmlLayout();
-
-			if (appenderType.equals("ConsoleAppender")) {
-
-				appender = new ConsoleAppender(layout);
-				if (tokens.length == 3) {
-					appender.setReportLevel(ReportLevel.valueOf(tokens[2]));
-				}
-			} else {
-
-			}
-
-			if (appender != null) {
-				logger.addAppenders(appender);
-			}
-
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Class reflection = Reflection.class;
+		
+		System.out.println(reflection.getName());
+		System.out.println(reflection.getSuperclass());
+		
+		Class[] interfaces = reflection.getInterfaces();
+		
+		for(Class anInterface:interfaces) {
+			System.out.println(anInterface);
 		}
-		String input = scanner.nextLine();
-		while (!input.equals("END")) {
-
-			String[] tokens = input.split("\\|");
-			ReportLevel reportLevel = ReportLevel.valueOf(tokens[0]);
-			String time = tokens[1];
-			String message = tokens[2];
-
-			switch (reportLevel) {
-			case INFO: 
-				logger.logInfo(time, message);
-				break;
-				
-			case WARNING:
-				logger.logWarning(time, message);
-				break;
-				
-			case ERROR:
-				logger.logError(time, message);
-				break;
-				
-			case CRITICAL:
-				logger.logCritical(time, message);
-				break;
-				
-			case FATAL:
-				logger.logFatal(time, message);
-				break;
-				
-			}
-
-			input = scanner.nextLine();
-		}
-
+		
+		Object reflectionObject = reflection.getDeclaredConstructor().newInstance();
+		
+		System.out.println(reflectionObject.toString());
 	}
 }
