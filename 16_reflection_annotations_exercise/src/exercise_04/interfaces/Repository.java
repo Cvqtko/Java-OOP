@@ -1,6 +1,6 @@
 package exercise_04.interfaces;
 
-import jdk.jshell.spi.ExecutionControl;
+import javax.naming.OperationNotSupportedException;
 
 public interface Repository {
 
@@ -8,5 +8,5 @@ public interface Repository {
 
 	String getStatistics();
 
-	void removeUnit(String unitType) throws ExecutionControl.NotImplementedException;
+	void removeUnit(String unitType) throws OperationNotSupportedException;
 }

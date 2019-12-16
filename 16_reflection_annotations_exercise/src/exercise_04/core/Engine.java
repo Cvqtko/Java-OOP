@@ -1,17 +1,23 @@
 package exercise_04.core;
 
-import exercise_04.interfaces.Repository;
-import exercise_04.interfaces.Runnable;
-import exercise_04.interfaces.Unit;
-import exercise_04.interfaces.UnitFactory;
-import jdk.jshell.spi.ExecutionControl;
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import exercise_04.core.commands.Add;
+import exercise_04.core.commands.Fight;
+import exercise_04.core.commands.Report;
+import exercise_04.interfaces.Executable;
+import exercise_04.interfaces.Repository;
+import exercise_04.interfaces.Runnable;
+import exercise_04.interfaces.UnitFactory;
+import jdk.jshell.spi.ExecutionControl;
 
 public class Engine implements Runnable {
+
+	private static final String COMMAND_PACKAGE = "exercise_04.core.commands.";
 
 	private Repository repository;
 	private UnitFactory unitFactory;
@@ -23,8 +29,7 @@ public class Engine implements Runnable {
 
 	@Override
 	public void run() {
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(System.in));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			try {
 				String input = reader.readLine();
@@ -46,36 +51,46 @@ public class Engine implements Runnable {
 	// TODO: refactor for problem 4
 	private String interpretCommand(String[] data, String commandName) throws ExecutionControl.NotImplementedException {
 		String result;
-		switch (commandName) {
-			case "add":
-				result = this.addUnitCommand(data);
-				break;
-			case "report":
-				result = this.reportCommand(data);
-				break;
-			case "fight":
-				result = this.fightCommand(data);
-				break;
-			default:
-				throw new RuntimeException("Invalid command!");
+
+		// using Reflection
+
+		String command = getCorrectClassName(data[0]);
+
+		try {
+			Class clazz = Class.forName(COMMAND_PACKAGE + command);
+
+			Constructor constructor = clazz.getDeclaredConstructor(String[].class, Repository.class, UnitFactory.class);
+
+			Executable instance = (Executable) constructor.newInstance(data, this.repository, this.unitFactory);
+
+			result = instance.execute();
+
+		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+
+			result = "Invalid command!";
 		}
+
+		// using switch
+//		switch (commandName) {
+//		case "add":
+//			result = new Add(data, this.repository, this.unitFactory).execute();
+//			break;
+//		case "report":
+//			result = new Report(data, this.repository, this.unitFactory).execute();
+//			break;
+//		case "fight":
+//			result = new Fight(data, this.repository, this.unitFactory).execute();
+//			break;
+//		default:
+//			throw new RuntimeException("Invalid command!");
+//		}
 		return result;
 	}
 
-	private String reportCommand(String[] data) {
-		String output = this.repository.getStatistics();
-		return output;
+	private String getCorrectClassName(String name) {
+		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 
-	private String addUnitCommand(String[] data) throws ExecutionControl.NotImplementedException {
-		String unitType = data[1];
-		Unit unitToAdd = this.unitFactory.createUnit(unitType);
-		this.repository.addUnit(unitToAdd);
-		String output = unitType + " added!";
-		return output;
-	}
-	
-	private String fightCommand(String[] data) {
-		return "fight";
-	}
 }

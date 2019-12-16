@@ -3,17 +3,17 @@ package exercise_04.core.factories;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import exercise_03.interfaces.Unit;
-import exercise_03.interfaces.UnitFactory;
-import exercise_03.models.units.Archer;
-import exercise_03.models.units.Gunner;
-import exercise_03.models.units.Horseman;
-import exercise_03.models.units.Pikeman;
-import exercise_03.models.units.Swordsman;
+import exercise_04.interfaces.Unit;
+import exercise_04.interfaces.UnitFactory;
+import exercise_04.models.units.Archer;
+import exercise_04.models.units.Gunner;
+import exercise_04.models.units.Horseman;
+import exercise_04.models.units.Pikeman;
+import exercise_04.models.units.Swordsman;
 
 public class UnitFactoryImpl implements UnitFactory {
 
-	private static final String UNITS_PACKAGE_NAME = "exercise_03.models.units.";
+	private static final String UNITS_PACKAGE_NAME = "exercise_04.models.units.";
 
 	@Override
 	public Unit createUnit(String unitType) {

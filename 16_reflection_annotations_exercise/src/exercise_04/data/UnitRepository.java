@@ -7,6 +7,8 @@ import jdk.jshell.spi.ExecutionControl;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.naming.OperationNotSupportedException;
+
 public class UnitRepository implements Repository {
 
 	private Map<String, Integer> amountOfUnits;
@@ -28,18 +30,22 @@ public class UnitRepository implements Repository {
 	public String getStatistics() {
 		StringBuilder statBuilder = new StringBuilder();
 		for (Map.Entry<String, Integer> entry : amountOfUnits.entrySet()) {
-			String formatedEntry =
-					String.format("%s -> %d%n", entry.getKey(), entry.getValue());
+			String formatedEntry = String.format("%s -> %d%n", entry.getKey(), entry.getValue());
 			statBuilder.append(formatedEntry);
 		}
-		statBuilder.setLength(
-				statBuilder.length() - System.lineSeparator().length());
+		statBuilder.setLength(statBuilder.length() - System.lineSeparator().length());
 
 		return statBuilder.toString();
 	}
 
-	public void removeUnit(String unitType) throws ExecutionControl.NotImplementedException {
+	public void removeUnit(String unitType) throws OperationNotSupportedException {
 		// TODO: implement for problem 4
-		throw new ExecutionControl.NotImplementedException("message");
+		if (!this.amountOfUnits.containsKey(unitType)) {
+			throw new OperationNotSupportedException("No such units in repository.");
+		}
+		int newValue = this.amountOfUnits.get(unitType) - 1;
+
+		this.amountOfUnits.put(unitType, newValue);
+
 	}
 }
