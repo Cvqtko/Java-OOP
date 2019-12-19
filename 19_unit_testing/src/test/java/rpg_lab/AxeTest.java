@@ -1,25 +1,37 @@
 package rpg_lab;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 public class AxeTest {
+	private static final int BASE_ATTACK = 50;
+	private static final int BASE_DURABILITY = 1;
+	private static final int BASE_HEALTH = 10;
+	private static final int BASE_EXPERIENCE = 10;
+
+	private Axe axe;
+	private Dummy dummy;
+
+	@Before
+	public void setup() {
+		this.axe = new Axe(BASE_ATTACK, BASE_DURABILITY);
+		this.dummy = new Dummy(BASE_HEALTH, BASE_HEALTH);
+	}
+
 	@Test
 	public void shouldLoseDurabilityAfterAttack() {
-		Axe axe = new Axe(50, 5);
-		Dummy dummy = new Dummy(10, 10);
 
 		axe.attack(dummy);
 
-		Assert.assertTrue(axe.getDurabilityPoints() == 4);
+		assertEquals(BASE_DURABILITY - 1, axe.getDurabilityPoints());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExceptionWithNegativeDurability() {
-		Axe axe = new Axe(50, 0);
-		Dummy dummy = new Dummy(10, 10);
 
+		this.axe = new Axe(BASE_ATTACK, 0);
 		axe.attack(dummy);
 
 	}

@@ -1,33 +1,54 @@
 package rpg_lab;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import junit.framework.Assert;
-
 public class DummyTest {
+	private static final int BASE_HEALTH = 10;
+	private static final int BASE_EXPERIENCE = 10;
+
+	private Dummy dummy;
+
+	private void setupAliveDummy() {
+		this.dummy = new Dummy(BASE_HEALTH, BASE_EXPERIENCE);
+	}
+
+	private void setupDeadDummy() {
+		this.dummy = new Dummy(-BASE_HEALTH, BASE_EXPERIENCE);
+	}
+
 	@Test
 	public void dummyShouldLoseHealthWhenAttacked() {
+		final int attack = 5;
+		setupAliveDummy();
+		dummy.takeAttack(attack);
 
-		Dummy dummy = new Dummy(10, 10);
-		dummy.takeAttack(5);
-
-		Assert.assertTrue(dummy.getHealth() == 5);
+		assertEquals(BASE_HEALTH - attack, this.dummy.getHealth());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExceptionWhenAttackingDeadDummy() {
-		Dummy dummy = new Dummy(-5, 10);
-		dummy.takeAttack(5);
+		final int attack = 5;
+		setupDeadDummy();
+		dummy.takeAttack(attack);
 
-		Assert.assertTrue(dummy.getHealth() == 5);
 	}
 
 	@Test
 	public void shouldGiveExperienceWhenKilled() {
-		Dummy dummy = new Dummy(-5, 10);
+		setupDeadDummy();
 		int actual = dummy.giveExperience();
 
-		Assert.assertTrue(actual == 10);
+		assertEquals(BASE_EXPERIENCE, this.dummy.giveExperience());
+
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void shouldThrowExceptionWhenGivingExperienceIfAlive() {
+		setupAliveDummy();
+		int actual = dummy.giveExperience();
 
 	}
 }
