@@ -8,7 +8,7 @@ import p01_Database.Database;
 
 public class DatabaseTest {
 
-	private static Integer[] numbers = { 1, 2, 3 };
+	private static Integer[] numbers = new Integer[] { 1, 2, 3 };
 	private Database database;
 
 	@Before
@@ -41,5 +41,53 @@ public class DatabaseTest {
 
 		Assert.assertArrayEquals(numbers, elements);
 
+	}
+
+	@Test(expected = OperationNotSupportedException.class)
+	public void databaseFunctionalTestWhenAddingNullElementShouldThrowException()
+			throws OperationNotSupportedException {
+		this.database.add(null);
+	}
+
+	@Test
+	public void databaseFunctionalTestWhenAddingElemntShouldInsertElementAtFirstEmptyIndex()
+			throws OperationNotSupportedException {
+		this.database.add(42);
+		Integer[] elements = this.database.getElements();
+		int lastElement = elements[elements.length - 1];
+		Assert.assertEquals(42, lastElement);
+	}
+
+	@Test(expected = OperationNotSupportedException.class)
+	public void databaseFunctionalTestWhenRemovingFromEmptyDatabaseShouldThrowException()
+			throws OperationNotSupportedException {
+		for (int i = 0; i < this.numbers.length; i++) {
+			this.database.remove();
+		}
+		this.database.remove();
+	}
+
+	@Test
+	public void databaseFunctionalTestWhenRemovingShouldRemoveElementsInReversedOrder()
+			throws OperationNotSupportedException {
+		this.database.remove();
+		Integer[] elements = this.database.getElements();
+		int lastElement = elements[elements.length - 1];
+
+		Assert.assertEquals(2, lastElement);
+
+	}
+
+	@Test
+	public void databaseFunctionalTestWhenRemovingAllElementsShouldBeInReversedOrder()
+			throws OperationNotSupportedException {
+		for (int i = numbers.length - 1; i >= 0; i--) {
+			Integer currentElement = this.numbers[i];
+			Integer[] elements = this.database.getElements();
+			Integer last = elements[elements.length - 1];
+			Assert.assertEquals(currentElement, last);
+			this.database.remove();
+		}
+		Assert.assertEquals(0, this.database.getElements().length);
 	}
 }
