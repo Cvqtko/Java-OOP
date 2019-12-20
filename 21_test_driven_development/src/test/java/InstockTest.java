@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -139,6 +140,21 @@ public class InstockTest {
 		assertArrayEquals(LABELS, arr);
 	}
 	
+	@Test
+	public void getIterableShouldReturnAllElements() {
+		fillWithProducts();
+		Iterator<Product> iterator = this.instock.iterator();
+		
+		String[] resNames = new String[LABELS.length];
+		
+		int index=0;
+		
+		while (iterator.hasNext()) {
+			resNames[index++] = iterator.next().getLabel();
+		}
+		
+		assertArrayEquals(LABELS, resNames);
+	}
 
 	private void fillWithProducts() {
 		for (int i = 0; i < LABELS.length; i++) {

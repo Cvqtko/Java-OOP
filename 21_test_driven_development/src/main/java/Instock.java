@@ -58,11 +58,8 @@ public class Instock implements ProductStock {
 	public Iterable<Product> findFirstByAlphabeticalOrder(int count) {
 		Iterable<Product> foundProducts = new ArrayList<>();
 		if (count <= this.products.size()) {
-			foundProducts = this.products
-					.values()
-					.stream()
-					.sorted(Product::compareTo)
-					.limit(count).collect(Collectors.toList());
+			foundProducts = this.products.values().stream().sorted(Product::compareTo).limit(count)
+					.collect(Collectors.toList());
 		}
 
 		return foundProducts;
@@ -91,6 +88,6 @@ public class Instock implements ProductStock {
 
 	@Override
 	public Iterator<Product> iterator() {
-		throw new UnsupportedOperationException();
+		return this.products.values().iterator();
 	}
 }
