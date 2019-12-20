@@ -1,7 +1,9 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Instock implements ProductStock {
 	private Map<String, Product> products;
@@ -29,26 +31,42 @@ public class Instock implements ProductStock {
 	public Product find(int index) {
 		Product product = this.products.entrySet().stream().skip(index).map(Map.Entry::getValue).findFirst()
 				.orElse(null);
-		if(product==null) {
+		if (product == null) {
 			throw new IndexOutOfBoundsException();
-		}else {
+		} else {
 			return product;
 		}
 	}
 
 	@Override
 	public void changeQuantity(String product, int quantity) {
+		if (this.products.get(product) == null) {
+			throw new IllegalArgumentException();
+		}
 		this.products.get(product).setQuantity(quantity);
 	}
 
 	@Override
 	public Product findByLabel(String label) {
-		throw new UnsupportedOperationException();
+		if (!this.products.containsKey(label)) {
+			throw new IllegalArgumentException();
+		}
+		return this.products.get(label);
 	}
 
 	@Override
 	public Iterable<Product> findFirstByAlphabeticalOrder(int count) {
-		throw new UnsupportedOperationException();
+		Iterable<Product> foundProducts = new ArrayList<>();
+		if (count <= this.products.size()) {
+			foundProducts = this.products
+					.values()
+					.stream()
+					.sorted(Product::compareTo)
+					.limit(count).collect(Collectors.toList());
+		}
+
+		return foundProducts;
+
 	}
 
 	@Override

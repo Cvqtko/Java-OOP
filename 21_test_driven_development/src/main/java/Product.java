@@ -1,43 +1,53 @@
 public class Product implements Comparable<Product> {
 
-    public String label;
+	public String label;
 
-    public double price;
+	public double price;
 
-    public int quantity;
+	public int quantity;
 
-    public Product(String label, double price, int quantity) {
-        this.label = label;
-        this.price = price;
-        this.quantity = quantity;
-    }
+	public Product(String label, double price, int quantity) {
+		this.label = label;
+		this.price = price;
+		this.quantity = quantity;
+	}
 
-    public String getLabel() {
-        return this.label;
-    }
+	public String getLabel() {
+		return this.label;
+	}
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    public double getPrice() {
-        return this.price;
-    }
+	public double getPrice() {
+		return this.price;
+	}
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
-    public int getQuantity() {
-        return this.quantity;
-    }
+	public int getQuantity() {
+		return this.quantity;
+	}
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
-    @Override
-    public int compareTo(Product o) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public int compareTo(Product o) {
+		return this.getLabel().compareTo(o.getLabel());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Product)) {
+			return false;
+		}
+		Product other = (Product) obj;
+		return other.label.equals(this.label);
+	}
+
 }

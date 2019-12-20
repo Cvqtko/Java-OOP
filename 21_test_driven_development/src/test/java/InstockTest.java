@@ -1,11 +1,14 @@
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class InstockTest {
 
-	private static final String[] LABEL = { "A", "B", "C", "D", "E" };
+	private static final String[] LABELS = { "B", "D", "A", "C", "E" };
 
 	private Instock instock;
 	private Product product;
@@ -51,30 +54,95 @@ public class InstockTest {
 	@Test
 	public void findShouldReturnCorrectProductAccordingToInsertionOrder() {
 		fillWithProducts();
-		int order = LABEL.length / 2;
+		int order = LABELS.length / 2;
 		Product returnedProduct = this.instock.find(order);
 
-		assertEquals(LABEL[order], returnedProduct.getLabel());
+		assertEquals(LABELS[order], returnedProduct.getLabel());
 
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void findWithInvalidIndexShouldThrowException() {
 		fillWithProducts();
-		this.instock.find(this.LABEL.length);
+		this.instock.find(this.LABELS.length);
 	}
-	
+
 	@Test
 	public void changeQuantityShouldReplaceOldQuantityValue() {
 		this.instock.add(product);
 		this.instock.changeQuantity(product.getLabel(), 69);
-		
+
 		assertEquals(69, product.getQuantity());
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void changeQuantityWithInvalidProductShouldThrowException() {
+		this.instock.add(product);
+		this.instock.changeQuantity("123", 23);
+	}
+
+	@Test
+	public void findByLabelShouldReturnCorrectProduct() {
+		this.instock.add(product);
+		Product searchedProduct = this.instock.findByLabel(product.getLabel());
+		assertEquals(product, searchedProduct);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void findByLabelWithInvalidLabelShouldThrowException() {
+		this.instock.add(product);
+		this.instock.findByLabel(this.product.getLabel() + "1");
+	}
+
+	@Test
+	public void findFirstByAlphabeticalOrderShouldReturnEmptyCollectionWithOutOfRangeArgument() {
+		fillWithProducts();
+		List<Product> products = (List<Product>) this.instock.findFirstByAlphabeticalOrder(LABELS.length + 1);
+
+		assertTrue(products.isEmpty());
+	}
+
+	@Test
+	public void findFirstByAlphabeticalOrderShouldReturnCorrectCountOfProducts() {
+		fillWithProducts();
+
+		List<Product> products = (List<Product>) this.instock.findFirstByAlphabeticalOrder(LABELS.length);
+
+		assertEquals(LABELS.length, products.size());
+	}
+	
+	@Test
+	public void findFirstByAlphabeticalOrderShouldReturnCorrectCountOfProductsWhenCountIsLessThanSize() {
+		fillWithProducts();
+
+		int count = LABELS.length/2;
+		
+		List<Product> products = (List<Product>) this.instock.findFirstByAlphabeticalOrder(count);
+
+		assertEquals(count, products.size());
+	}
+	
+	@Test
+	public void findFirstByAlphabeticalOrderShouldReturnElementsInCorrectOrder() {
+		fillWithProducts();
+		List<Product> products = (List<Product>) this.instock.findFirstByAlphabeticalOrder(LABELS.length);
+		
+		Arrays.sort(LABELS);
+		
+		String[] arr = new String[LABELS.length];
+		int index = 0;
+		
+		for(Product product : products) {
+			arr[index++] = product.getLabel();
+		}
+		
+		assertArrayEquals(LABELS, arr);
+	}
+	
+
 	private void fillWithProducts() {
-		for (int i = 0; i < LABEL.length; i++) {
-			this.instock.add(new Product(LABEL[i], i, i));
+		for (int i = 0; i < LABELS.length; i++) {
+			this.instock.add(new Product(LABELS[i], i, i));
 		}
 
 	}
